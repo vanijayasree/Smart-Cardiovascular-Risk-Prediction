@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h3 class="text-center text-primary mb-4">
+    {% if role == "Admin" %} 🌍 Global Visualizations {% else %} 📊 My Visualizations {% endif %}
+  </h3>
+
+  <div class="row">
+    {% for title, img in plots.items() %}
+      <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+        <div class="card shadow h-100 border-0">
+          <div class="card-header bg-info text-white fw-bold text-center">
+            {{ title }}
+          </div>
+          <div class="card-body text-center">
+            <img src="{{ img }}" class="img-fluid w-100 rounded shadow-sm" alt="{{ title }}">
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="text-center mt-4">
+    {% if role == "Admin" %}
+      <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary px-4 py-2">⬅ Back to Admin Dashboard</a>
+    {% else %}
+      <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary px-4 py-2">⬅ Back to User Dashboard</a>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .card:hover {
+    transform: translateY(-4px);
+    transition: 0.2s ease-in-out;
+  }
+</style>
+{% endblock %}

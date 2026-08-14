@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card shadow-sm p-4">
+  <h3>System Settings</h3>
+  <form method="post" action="{{ url_for('toggle_registration') }}">
+    <p>Allow User Registration:
+      {% if settings.allow_registration %}
+        <span class="badge bg-success">Enabled</span>
+      {% else %}
+        <span class="badge bg-danger">Disabled</span>
+      {% endif %}
+    </p>
+    <button class="btn btn-warning">Toggle Registration</button>
+  </form>
+</div>
+{% endblock %}

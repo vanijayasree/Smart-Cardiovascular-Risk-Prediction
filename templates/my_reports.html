@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card shadow-sm p-4">
+  <h3 class="text-primary">My Reports</h3>
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Patient</th>
+          <th>Age</th>
+          <th>Prediction</th>
+          <th>Probability</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in reports %}
+        <tr>
+          <td>{{ r.patient_name }}</td>
+          <td>{{ r.age }}</td>
+          <td>{{ r.prediction }}</td>
+          <td>{{ r.probability }}</td>
+          <td>{{ r.created_at }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

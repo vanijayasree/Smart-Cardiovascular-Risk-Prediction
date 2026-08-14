@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card shadow-sm p-4">
+  <h3 class="text-primary text-center mb-4">
+    <i class="bi bi-heart-pulse-fill text-danger"></i> Heart Disease Prediction
+  </h3>
+
+  <!-- Prediction Form -->
+  <form method="POST" action="{{ url_for('predict') }}">
+    <div class="mb-3">
+      <label for="patient_name" class="form-label">👤 Patient Name</label>
+      <input id="patient_name" class="form-control" name="patient_name" placeholder="Enter patient name" required>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="age" class="form-label">🎂 Age</label>
+        <input id="age" class="form-control" type="number" name="age" placeholder="Enter age" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="sex" class="form-label">⚧ Sex</label>
+        <select id="sex" class="form-select" name="sex" required>
+          <option value="">Select</option>
+          <option value="1">Male</option>
+          <option value="0">Female</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="chest_pain_type" class="form-label">💓 Chest Pain Type</label>
+      <select id="chest_pain_type" class="form-select" name="chest_pain_type" required>
+        <option value="">Select</option>
+        <option value="0">Typical Angina</option>
+        <option value="1">Atypical Angina</option>
+        <option value="2">Non-anginal Pain</option>
+        <option value="3">Asymptomatic</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="resting_bp" class="form-label">🩸 Resting BP (mm Hg)</label>
+        <input id="resting_bp" class="form-control" type="number" name="resting_bp" placeholder="e.g. 120" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="cholesterol" class="form-label">🥓 Cholesterol (mg/dl)</label>
+        <input id="cholesterol" class="form-control" type="number" name="cholesterol" placeholder="e.g. 200" required>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="fasting_bs" class="form-label">🧪 Fasting Blood Sugar</label>
+        <select id="fasting_bs" class="form-select" name="fasting_bs" required>
+          <option value="">Select</option>
+          <option value="1">Yes (≥ 120 mg/dl)</option>
+          <option value="0">No (&lt; 120 mg/dl)</option>
+        </select>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="rest_ecg" class="form-label">🧠 Resting ECG</label>
+        <select id="rest_ecg" class="form-select" name="rest_ecg" required>
+          <option value="">Select</option>
+          <option value="0">Normal</option>
+          <option value="1">ST-T wave abnormality</option>
+          <option value="2">Left ventricular hypertrophy</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="max_hr" class="form-label">🏃 Max Heart Rate</label>
+        <input id="max_hr" class="form-control" type="number" name="max_hr" placeholder="e.g. 150" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="exercise_angina" class="form-label">⚡ Exercise Induced Angina</label>
+        <select id="exercise_angina" class="form-select" name="exercise_angina" required>
+          <option value="">Select</option>
+          <option value="1">Yes</option>
+          <option value="0">No</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label for="oldpeak" class="form-label">📉 Oldpeak (ST depression)</label>
+        <input id="oldpeak" class="form-control" type="number" step="0.1" name="oldpeak" placeholder="e.g. 2.5" required>
+      </div>
+      <div class="col-md-6 mb-3">
+        <label for="st_slope" class="form-label">📈 ST Slope</label>
+        <select id="st_slope" class="form-select" name="st_slope" required>
+          <option value="">Select</option>
+          <option value="0">Upsloping</option>
+          <option value="1">Flat</option>
+          <option value="2">Downsloping</option>
+        </select>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">🔍 Predict</button>
+  </form>
+
+    <div class="text-center mt-3">
+
+
+
+  <!-- Prediction Results Section -->
+  {% if prediction %}
+  <div class="alert alert-info mt-4">
+    <h5>📊 Prediction Result</h5>
+    <p><b>Patient:</b> {{ patient_name }}</p>
+    <p><b>Risk Category:</b> {{ prediction }}</p>
+    <p><b>Probability:</b> {{ probability }}%</p>
+
+    <a href="{{ url_for('show_recommendations', report_id=report_id) }}" class="btn btn-outline-success w-100 mt-2">
+      📄 Show Recommendations
+    </a>
+  </div>
+
+  <!-- SHAP Explainability -->
+  {% if importance %}
+  <div class="alert alert-warning mt-4">
+    <h5>🔎 Why this prediction?</h5>
+    <ul>
+      {% for feature, value in importance %}
+        <li>{{ feature }} → {{ value|round(2) }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  <!-- SHAP Plot -->
+  {% if shap_filename %}
+  <div class="text-center mt-4">
+    <h5>📊 SHAP Feature Importance Chart</h5>
+    <img src="{{ url_for('static', filename=shap_filename) }}"
+         alt="SHAP Explanation" class="img-fluid rounded shadow border p-2 bg-white">
+  </div>
+  {% endif %}
+  {% endif %}
+
+  <hr>
+  <a href="{{ url_for('my_reports') }}" class="btn btn-outline-primary w-100">📄 View My Reports</a>
+</div>
+{% endblock %}

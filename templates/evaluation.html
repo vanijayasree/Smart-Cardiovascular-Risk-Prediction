@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h3 class="text-primary">📊 Model Evaluation Metrics</h3>
+
+  <h5>Evaluation Results (3 Models)</h5>
+  {{ results|safe }}
+
+  <h5 class="mt-4">Feature Importance (Random Forest)</h5>
+  <img src="data:image/png;base64,{{ plot_url }}" class="img-fluid" alt="Feature Importance">
+
+  <div class="mt-4">
+    <a href="{{ url_for('show_recommendations', report_id=report_id) }}" class="btn btn-secondary">
+      ⬅ Back to Recommendations
+    </a>
+  </div>
+</div>
+{% endblock %}

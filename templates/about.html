@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    body {
+        background: url("{{ url_for('static', filename='images/hospitalwebsitebackground.webp') }}") no-repeat center center fixed;
+        background-size: cover;
+        height: 100vh;
+        margin: 0;
+        overflow-y: auto;
+    }
+
+    .about-container {
+        background-color: rgba(255, 255, 255, 0.92);
+        border-radius: 12px;
+        padding: 25px;
+        max-width: 1100px;
+        margin: auto;
+        margin-top: 2%;
+        margin-bottom: 2%;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    h1 {
+        color: #0d6efd; /* Keep main heading blue */
+        font-weight: bold;
+    }
+
+    h2 {
+        color: #212529;  /* Dark grey (Bootstrap text-dark) */
+        font-weight: bold;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.15); /* subtle shadow for readability */
+        margin-bottom: 12px;
+    }
+
+    .feature-card {
+        background: #fff;
+        border-radius: 10px;
+        padding: 16px;
+        min-height: 140px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    h5 {
+        color: #0d6efd; /* keep icons/titles inside cards blue */
+        font-weight: bold;
+    }
+
+    p {
+        font-size: 0.9rem;
+        text-align: justify;
+        margin-bottom: 6px;
+    }
+
+    .row {
+        margin-top: 12px;
+    }
+</style>
+
+
+
+<div class="container">
+    <div class="about-container text-center">
+        <h1 class="mb-3">💓 About Heart Disease Prediction System</h1>
+        <p class="lead">
+            This system leverages <b>Machine Learning</b> to analyze patient health data, predict the risk of heart disease,
+            and provide actionable recommendations. It helps both doctors and patients in early diagnosis, prevention,
+            and decision-making.
+        </p>
+    </div>
+
+    <!-- What is Heart Disease -->
+    <div class="row text-center">
+        <h2>❤️ What is Heart Disease?</h2>
+        <div class="col-md-12 mb-2">
+            <div class="feature-card">
+                <p>
+                    Heart disease refers to several types of conditions that affect the heart, including
+                    <b>coronary artery disease, arrhythmias, heart failure, and congenital defects</b>.
+                    It is one of the leading causes of death worldwide, making early detection essential.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Causes -->
+    <div class="row text-center">
+        <h2>⚠️ Why It Occurs?</h2>
+        <div class="col-md-6 mb-2">
+            <div class="feature-card">
+                <h5>🧬 Biological & Medical Factors</h5>
+                <p>High blood pressure, high cholesterol, diabetes, obesity, and family history contribute to heart disease risk.</p>
+            </div>
+        </div>
+        <div class="col-md-6 mb-2">
+            <div class="feature-card">
+                <h5>🚬 Lifestyle Factors</h5>
+                <p>Smoking, alcohol use, unhealthy diet, lack of exercise, and chronic stress increase the chances of heart disease.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Risk Factors -->
+    <div class="row text-center">
+        <h2>📌 Major Risk Factors</h2>
+        <div class="col-md-4 mb-2">
+            <div class="feature-card">
+                <h5>💉 Hypertension</h5>
+                <p>Uncontrolled high blood pressure damages arteries and strains the heart.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-2">
+            <div class="feature-card">
+                <h5>🍔 Poor Diet</h5>
+                <p>High intake of trans fats, salt, and sugar leads to obesity and cardiovascular issues.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-2">
+            <div class="feature-card">
+                <h5>🛑 Lack of Exercise</h5>
+                <p>Inactive lifestyle increases the risk of obesity, diabetes, and hypertension.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prevention -->
+    <div class="row text-center">
+        <h2>🩺 Prevention & Care</h2>
+        <div class="col-md-3 mb-2">
+            <div class="feature-card">
+                <h5>🥦 Healthy Diet</h5>
+                <p>Eat more vegetables, fruits, and whole grains for a healthy heart.</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-2">
+            <div class="feature-card">
+                <h5>🏃 Regular Exercise</h5>
+                <p>Engage in at least 30 minutes of physical activity daily.</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-2">
+            <div class="feature-card">
+                <h5>🚭 No Smoking</h5>
+                <p>Avoid smoking and limit alcohol consumption to protect your heart.</p>
+            </div>
+        </div>
+        <div class="col-md-3 mb-2">
+            <div class="feature-card">
+                <h5>🧘 Stress Management</h5>
+                <p>Practice yoga, meditation, or relaxation techniques to reduce stress.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-4 mb-3">
+        <a href="{{ url_for('index') }}" class="btn btn-primary">🏠 Back to Home</a>
+        <a href="{{ url_for('login') }}" class="btn btn-success">🔑 Login</a>
+        <a href="{{ url_for('register') }}" class="btn btn-warning">📝 Register</a>
+    </div>
+</div>
+{% endblock %}

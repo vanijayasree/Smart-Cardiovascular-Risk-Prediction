@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  .recommend-card {
+    border-radius: 15px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease-in-out;
+  }
+  .recommend-card:hover {
+    transform: translateY(-5px);
+  }
+  .card-header {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: white;
+    border-radius: 15px 15px 0 0;
+  }
+  .diet-bg {
+    background: linear-gradient(45deg, #28a745, #85e085);
+  }
+  .exercise-bg {
+    background: linear-gradient(45deg, #0d6efd, #66b3ff);
+  }
+  .stress-bg {
+    background: linear-gradient(45deg, #ffc107, #ffdd75);
+  }
+  .btn-custom {
+    border-radius: 30px;
+    font-weight: 500;
+    padding: 10px 18px;
+  }
+</style>
+
+<div class="container mt-4">
+  <h3 class="text-center text-primary mb-4">
+    <i class="bi bi-journal-medical text-danger"></i> Personalized Recommendations
+  </h3>
+
+  <!-- Patient Details -->
+  <div class="alert alert-info shadow-sm">
+    <p><b>👤 Patient:</b> {{ name }}</p>
+    <p><b>📊 Risk Level:</b> <span class="fw-bold">{{ prediction }}</span></p>
+    <p><b>🎯 Probability:</b> {{ probability }}%</p>
+  </div>
+
+  <!-- SHAP Explainability -->
+  {% if shap_filename %}
+  <div class="card recommend-card shadow-sm mb-4">
+    <div class="card-header" style="background: linear-gradient(45deg, #6f42c1, #b18aff); color: white;">
+      🔍 Why this prediction? (Explainable AI)
+    </div>
+    <div class="card-body text-center">
+      <img src="{{ url_for('static', filename=shap_filename) }}" class="img-fluid rounded" alt="SHAP explanation">
+      <p class="text-muted mt-2 mb-0">
+        Red bars pushed the risk score higher; green bars pulled it lower — for this patient's specific values.
+      </p>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Show Evaluation Metrics Button -->
+  <div class="text-center mb-4">
+    <a href="{{ url_for('show_evaluation', report_id=report_id) }}"
+       class="btn btn-warning btn-custom">
+      📊 Show Evaluation Metrics
+    </a>
+  </div>
+
+  <!-- Recommendations Cards -->
+  <div class="row text-center">
+    <!-- Diet Plan -->
+    <div class="col-md-4 mb-3">
+      <div class="card recommend-card border-success">
+        <div class="card-header diet-bg">
+          🥦 Diet Plan
+        </div>
+        <div class="card-body">
+          <p class="card-text">{{ diet }}</p>
+          <a href="{{ url_for('show_diet', report_id=report_id) }}" class="btn btn-success btn-sm mt-2">
+             🍎 Show Diet
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Exercise Plan -->
+    <div class="col-md-4 mb-3">
+      <div class="card recommend-card border-primary">
+        <div class="card-header exercise-bg">
+          🏃 Exercise Plan
+        </div>
+        <div class="card-body">
+          <p class="card-text">{{ exercise }}</p>
+          <a href="{{ url_for('show_exercise', report_id=report_id) }}" class="btn btn-primary btn-sm mt-2">
+            💪 Show Exercise
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stress Management -->
+    <div class="col-md-4 mb-3">
+      <div class="card recommend-card border-warning">
+        <div class="card-header stress-bg">
+          😌 Stress Management
+        </div>
+        <div class="card-body">
+          <p class="card-text">{{ stress }}</p>
+          <a href="{{ url_for('show_stress', report_id=report_id) }}" class="btn btn-warning btn-sm mt-2">
+            🧘 Show Stress Management
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Buttons Row -->
+  <div class="d-flex justify-content-between flex-wrap gap-2">
+    <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary btn-custom">
+      ⬅️ Back to Dashboard
+    </a>
+    <a href="{{ url_for('my_reports') }}" class="btn btn-primary btn-custom">
+      📄 View My Reports
+    </a>
+    <a href="{{ url_for('user_visualizations') }}" class="btn btn-info btn-custom">
+      📊 View My Visualizations
+    </a>
+    <a href="{{ url_for('download_report', report_id=report_id) }}"
+       class="btn btn-success btn-custom">
+      📥 Download Report (PDF)
+    </a>
+  </div>
+</div>
+{% endblock %}

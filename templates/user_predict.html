@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+  <div class="col-md-8">
+    <div class="card shadow-sm p-4">
+      <h4>Enter Patient Details</h4>
+      <form id="predictForm">
+        <input class="form-control mb-2" id="patient_name" name="patient_name" placeholder="Patient Name">
+
+        {# Dropdowns for structured inputs #}
+        <label class="form-label">Sex</label>
+        <select class="form-select mb-2" name="f1" required>
+          <option value="">-- Select --</option>
+          <option value="1">Male</option>
+          <option value="0">Female</option>
+        </select>
+
+        <label class="form-label">Chest Pain Type</label>
+        <select class="form-select mb-2" name="f2" required>
+          <option value="">-- Select --</option>
+          <option value="0">Typical Angina</option>
+          <option value="1">Atypical Angina</option>
+          <option value="2">Non-anginal Pain</option>
+          <option value="3">Asymptomatic</option>
+        </select>
+
+        {# Other numeric fields #}
+        <input class="form-control mb-2" name="f0" placeholder="Age" type="number" required>
+        <input class="form-control mb-2" name="f3" placeholder="Resting BP (mm Hg)" type="number" required>
+        <input class="form-control mb-2" name="f4" placeholder="Cholesterol (mg/dl)" type="number" required>
+        <input class="form-control mb-2" name="f5" placeholder="Fasting BS (1=True, 0=False)" type="number" required>
+        <input class="form-control mb-2" name="f6" placeholder="Rest ECG (0/1/2)" type="number" required>
+        <input class="form-control mb-2" name="f7" placeholder="Max HR" type="number" required>
+        <input class="form-control mb-2" name="f8" placeholder="Exercise Angina (1=Yes, 0=No)" type="number" required>
+        <input class="form-control mb-2" name="f9" placeholder="Oldpeak" type="number" step="0.1" required>
+        <input class="form-control mb-2" name="f10" placeholder="ST Slope (0/1/2)" type="number" required>
+
+        <button class="btn btn-primary w-100 mt-2" type="submit">Predict Risk</button>
+      </form>
+
+      <div id="basicResult" class="alert mt-3 d-none"></div>
+
+      <!-- Progress Bar -->
+      <div id="riskBarContainer" class="mt-3 d-none">
+        <label class="form-label">Risk Level</label>
+        <div class="progress">
+          <div id="riskBar" class="progress-bar" role="progressbar" style="width:0%">0%</div>
+        </div>
+      </div>
+
+      <button id="showRecoBtn" class="btn btn-success mt-3 d-none">Show Recommendations</button>
+    </div>
+  </div>
+
+  <!-- Right column for instructions -->
+  <div class="col-md-4">
+    <div class="card shadow-sm p-4">
+      <h5>Instructions</h5>
+      <p>Fill the patient details and click <strong>Predict Risk</strong>.
+      The result will show a <span class="text-danger">progress bar</span> and tailored recommendations.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+document.getElementById('predictForm').onsubmit = async function(e){
+  e.preventDefault();
+  const form = new FormData(e.target);
+  const res = await fetch('{{ url_for("predict") }}', { method:'POST', body: form });
+  const data = await res.json();
+  if(data.error){ alert(data.error); return; }
+
+  // Show basic result
+  const basic = document.getElementById('basicResult');
+  basic.classList.remove('d-none');
+  basic.innerHTML = `<strong>Patient:</strong> ${data.name || '(unnamed)'}<br>
+                     <strong>Risk:</strong> ${data.risk}<br>
+                     <strong>Probability:</strong> ${data.probability}%`;
+
+  // Show progress bar
+  const barContainer = document.getElementById('riskBarContainer');
+  const bar = document.getElementById('riskBar');
+  barContainer.classList.remove('d-none');
+  bar.style.width = data.probability + "%";
+  bar.innerText = data.probability + "%";
+
+  if(data.probability >= 70){
+    bar.className = "progress-bar bg-danger";
+  } else if(data.probability >= 40){
+    bar.className = "progress-bar bg-warning text-dark";
+  } else {
+    bar.className = "progress-bar bg-success";
+  }
+
+  // High risk alert
+  if(data.alert){ alert(data.alert); }
+
+  // Store recommendations
+  const btn = document.getElementById('showRecoBtn');
+  btn.dataset.name = data.name || '';
+  btn.dataset.diet = data.diet;
+  btn.dataset.exercise = data.exercise;
+  btn.dataset.stress = data.stress;
+  btn.classList.remove('d-none');
+};
+
+document.getElementById('showRecoBtn').onclick = function(){
+  const params = new URLSearchParams({
+    name: this.dataset.name,
+    diet: this.dataset.diet,
+    exercise: this.dataset.exercise,
+    stress: this.dataset.stress
+  });
+  window.location = '{{ url_for("recommendations") }}' + '?' + params.toString();
+};
+</script>
+{% endblock %}
