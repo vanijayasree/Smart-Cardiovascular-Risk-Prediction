@@ -70,7 +70,7 @@ Register your own user account from the Register page to test as a regular user.
 
 **Host:** localhost  
 **User:** root  
-**Password:** ************ 
+**Password:** *******  
 **Database:** heart_project
 
 ### Tables
@@ -135,7 +135,7 @@ Register your own user account from the Register page to test as a regular user.
 
 **MySQL connection error?**
 - Ensure MySQL80 service is running (`Win + R` → `services.msc`)
-- Verify password: `***********`
+- Verify password: `********`
 - Check database `heart_project` exists
 
 **Port 5000 already in use?**
